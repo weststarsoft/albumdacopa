@@ -118,12 +118,8 @@ body{background:var(--surface);color:var(--text);font-family:'Barlow',sans-serif
 }
 .sticker:hover{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.35);transform:scale(1.06)}
 .sticker.owned{background:rgba(212,168,67,0.15);border-color:rgba(212,168,67,0.6)}
-.sticker.owned::after{
-  content:'✓';
-  font-size:14px;font-weight:700;
-  color:var(--gold);
-  text-shadow:0 1px 4px rgba(0,0,0,0.5);
-}
+.sticker .trophy{display:none;width:72%;height:72%}
+.sticker.owned .trophy{display:block}
 .sticker.owned:hover{background:rgba(212,168,67,0.25)}
 
 .card-progress-bar{margin-top:10px;height:2px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden}
@@ -347,6 +343,7 @@ function persist(){
   if(document.getElementById('sec-missing').classList.contains('active'))renderMissing();
 }
 
+const TROPHY=`<svg class="trophy" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#F2D07A"/><stop offset="50%" stop-color="#D4A843"/><stop offset="100%" stop-color="#8A6020"/></linearGradient></defs><g fill="url(#tg)"><path d="M44 8H20v2h-4v2h-4v4h4v2h2c.5 6 3.5 11 8 14v3h-4v3h-4v4h28v-4h-4v-3h-4v-3c4.5-3 7.5-8 8-14h2v-2h4v-4h-4v-2h-4V8z M40 18v-6H24v6c0 6 3.6 10 8 10s8-4 8-10z M12 12v4h4v-2h-2v-2h-2z M52 12h-2v2h-2v2h4v-4z"/><rect x="24" y="50" width="16" height="3" rx="1"/><rect x="20" y="53" width="24" height="3" rx="1"/></g></svg>`;
 function total(){return Object.values(state).filter(v=>v===1).length}
 
 function updateStats(){
@@ -390,19 +387,19 @@ function renderCard(group,team){
   // Row 1: logo cell + 6 stickers (indices 0-5)
   const row1=Array.from({length:6},(_,i)=>{
     const key=sk(group,team,i);
-    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}"></div>`;
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:''}</div>`;
   }).join('');
 
   // Row 2: 7 stickers (indices 6-12)
   const row2=Array.from({length:7},(_,i)=>{
     const key=sk(group,team,i+6);
-    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}"></div>`;
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:''}</div>`;
   }).join('');
 
   // Row 3: 7 stickers (indices 13-19)
   const row3=Array.from({length:7},(_,i)=>{
     const key=sk(group,team,i+13);
-    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}"></div>`;
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:''}</div>`;
   }).join('');
 
   return `<div class="team-card flag-${flagCls}" data-group="${group}" data-team="${team}">
@@ -511,7 +508,11 @@ function bindStickers(){
     el.addEventListener('click',e=>{
       e.stopPropagation();
       toggle(el.dataset.key);
-      el.classList.toggle('owned',owned(el.dataset.key));
+      const isOwned=owned(el.dataset.key);
+      el.classList.toggle('owned',isOwned);
+      let t=el.querySelector('.trophy');
+      if(isOwned&&!t){el.insertAdjacentHTML('beforeend',TROPHY)}
+      else if(!isOwned&&t){t.remove()}
     });
   });
 }
