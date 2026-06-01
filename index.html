@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Copa do Mundo — Álbum de Figurinhas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#D4A843;--gold-light:#F2D07A;
+  --surface:#0f0f0f;--surface2:#181818;--surface3:#242424;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#F0EDE6;--text2:rgba(240,237,230,0.5);--text3:rgba(240,237,230,0.25);
+  --green:#3DAA6E;--radius:14px;--card-height:480px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--surface);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* HEADER */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(15,15,15,0.95);backdrop-filter:blur(20px);
+  border-bottom:.5px solid var(--border);padding:14px 20px 0;
+}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.logo{display:flex;flex-direction:column;line-height:1}
+.logo-main{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
+.logo-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--text3)}
+.header-stats{display:flex;gap:16px;align-items:center}
+.hstat{text-align:right}
+.hstat-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--gold);line-height:1}
+.hstat-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+.hstat-div{width:.5px;height:28px;background:var(--border2)}
+.progress-wrap{height:2px;background:var(--border);margin:0 -20px}
+.progress-fill{height:100%;background:var(--gold);transition:width .5s ease;width:0%}
+.nav-tabs{display:flex;gap:2px;padding:10px 0 0;overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{
+  padding:7px 16px;border-radius:6px 6px 0 0;
+  font-size:11px;font-weight:600;letter-spacing:1px;cursor:pointer;
+  white-space:nowrap;text-transform:uppercase;
+  border:.5px solid transparent;border-bottom:none;
+  background:transparent;color:var(--text3);transition:all .15s;
+  font-family:'Barlow Condensed',sans-serif;
+}
+.nav-tab:hover{color:var(--text2)}
+.nav-tab.active{background:var(--surface2);color:var(--gold);border-color:var(--border);border-bottom-color:var(--surface2)}
+
+/* MAIN */
+.main{max-width:900px;margin:0 auto;padding:24px 16px 100px}
+.section{display:none}
+.section.active{display:block}
+
+/* GROUP */
+.group-block{margin-bottom:28px}
+.group-label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px}
+.group-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--text3)}
+.group-dots{display:flex;gap:5px;align-items:center}
+.group-dot{width:5px;height:5px;border-radius:50%;background:var(--border2);cursor:pointer;transition:all .2s}
+.group-dot.active{background:var(--gold);transform:scale(1.3)}
+
+/* SLIDER */
+.slider-viewport{overflow:hidden;border-radius:var(--radius);cursor:grab;user-select:none}
+.slider-viewport:active{cursor:grabbing}
+.slider-track{display:flex;transition:transform .38s cubic-bezier(.4,0,.2,1);will-change:transform}
+
+/* TEAM CARD */
+.team-card{min-width:100%;height:var(--card-height);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.card-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");opacity:.6;pointer-events:none}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.08) 0%,rgba(0,0,0,0.45) 40%,rgba(0,0,0,0.88) 100%)}
+.card-content{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;padding:22px 20px 20px}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:auto}
+.card-header-left{display:flex;flex-direction:column;gap:6px}
+.team-name-large{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:800;text-transform:uppercase;letter-spacing:1px;line-height:.9;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,0.7)}
+.card-badge{
+  background:rgba(255,255,255,0.1);border:.5px solid rgba(255,255,255,0.2);
+  border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;
+  color:rgba(255,255,255,0.65);font-family:'Barlow Condensed',sans-serif;
+  letter-spacing:1px;white-space:nowrap;align-self:flex-start;
+}
+.card-badge.complete{background:rgba(61,170,110,0.25);border-color:rgba(61,170,110,0.5);color:#6ee6a0}
+
+/* LOGO */
+.team-logo-wrap{
+  width:76px;height:76px;flex-shrink:0;border-radius:12px;
+  background:rgba(0,0,0,0.35);border:.5px solid rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  backdrop-filter:blur(6px);
+}
+.team-logo-wrap img{width:58px;height:58px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5))}
+
+/* STICKERS */
+.sticker-section{margin-top:16px}
+.sticker-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px;font-family:'Barlow Condensed',sans-serif}
+.sticker-rows{display:flex;flex-direction:column;gap:5px}
+.sticker-row{display:flex;gap:5px}
+
+/* Logo cell inside sticker grid */
+.sticker-logo-cell{
+  flex:1;aspect-ratio:1;border-radius:8px;
+  background:rgba(0,0,0,0.35);border:.5px solid rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  backdrop-filter:blur(4px);flex-shrink:0;
+}
+.sticker-logo-cell img{width:75%;height:75%;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.6))}
+
+/* Sticker cell */
+.sticker{
+  flex:1;aspect-ratio:1;border-radius:6px;
+  background:rgba(255,255,255,0.07);
+  border:.5px solid rgba(255,255,255,0.11);
+  cursor:pointer;transition:all .12s;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.sticker:hover{background:rgba(255,255,255,0.18);border-color:rgba(255,255,255,0.35);transform:scale(1.06)}
+.sticker.owned{background:rgba(212,168,67,0.15);border-color:rgba(212,168,67,0.6)}
+.sticker.owned::after{
+  content:'✓';
+  font-size:14px;font-weight:700;
+  color:var(--gold);
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+.sticker.owned:hover{background:rgba(212,168,67,0.25)}
+
+.card-progress-bar{margin-top:10px;height:2px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden}
+.card-progress-fill{height:100%;background:linear-gradient(90deg,rgba(255,255,255,0.35),rgba(255,255,255,0.8));border-radius:99px;transition:width .3s ease}
+
+/* Slider nav */
+.slider-nav{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:0 2px}
+.slider-arrow{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surface3);border:.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;color:var(--text2);font-size:14px;
+  font-family:sans-serif;
+}
+.slider-arrow:hover{background:var(--surface2);color:var(--text)}
+.slider-arrow:disabled{opacity:.2;cursor:default}
+.slider-counter{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--text3);letter-spacing:1px}
+
+/* SPECIALS */
+.specials-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.specials-grid{grid-template-columns:1fr}}
+.special-card{background:var(--surface2);border:.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.special-card-header{padding:14px 16px 12px;border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:12px}
+.special-card-logo{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.special-card-logo img{width:36px;height:36px;object-fit:contain}
+.special-card-info{flex:1}
+.special-card-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold)}
+.special-card-count{font-size:11px;color:var(--text3);font-family:'Barlow Condensed',sans-serif}
+.special-card-count.done{color:var(--green)}
+.special-sticker-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:14px}
+.special-sticker{
+  aspect-ratio:1;border-radius:8px;
+  background:rgba(255,255,255,0.04);border:.5px solid var(--border);
+  cursor:pointer;transition:all .12s;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;
+  font-size:9px;font-weight:700;color:var(--text3);
+  font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;user-select:none;
+}
+.special-sticker:hover{border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.08);color:var(--gold)}
+.special-sticker.owned{background:rgba(212,168,67,0.15);border-color:rgba(212,168,67,0.6);color:var(--gold)}
+.special-sticker.owned::before{content:'✓ '}
+
+/* MISSING */
+.missing-wrap{background:var(--surface2);border:.5px solid var(--border);border-radius:var(--radius);padding:20px 22px}
+.missing-title{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--text3);margin-bottom:20px}
+.missing-group{margin-bottom:16px}
+.missing-group:last-child{margin-bottom:0}
+.missing-group-name{font-size:11px;font-weight:500;color:var(--text2);margin-bottom:8px}
+.missing-pills{display:flex;flex-wrap:wrap;gap:4px}
+.missing-pill{background:var(--surface3);border:.5px solid var(--border2);border-radius:4px;padding:3px 8px;font-size:10px;font-weight:500;color:var(--text2);font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px}
+.empty-state{text-align:center;padding:60px 20px;font-size:13px;color:var(--text3)}
+
+/* BOTTOM */
+.bottom-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(12,12,12,0.97);border-top:.5px solid var(--border);
+  backdrop-filter:blur(16px);
+  padding:12px 24px 16px;
+  display:flex;align-items:center;justify-content:center;gap:28px;z-index:50;
+}
+.bstat{text-align:center}
+.bstat-val{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--gold);display:block;line-height:1}
+.bstat-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3)}
+.bstat-div{width:.5px;height:30px;background:var(--border2)}
+
+/* FLAG GRADIENTS */
+.flag-mexico        {background:linear-gradient(145deg,#0a3d1f 0%,#145a32 35%,#1a1a1a 60%,#7a1616 100%)}
+.flag-south-africa  {background:linear-gradient(145deg,#00612e 0%,#007a4d 25%,#111 45%,#de3831 70%,#ffb300 100%)}
+.flag-korea-republic{background:linear-gradient(145deg,#111827 0%,#1e2a40 40%,#7a1010 100%)}
+.flag-czechia       {background:linear-gradient(145deg,#0d2a5c 0%,#1a1a1a 50%,#7a1010 100%)}
+.flag-canada        {background:linear-gradient(145deg,#7a1010 0%,#1a1a1a 45%,#7a1010 100%)}
+.flag-bosnia-h      {background:linear-gradient(145deg,#0d2a5c 0%,#1240a0 55%,#b89a00 100%)}
+.flag-qatar         {background:linear-gradient(145deg,#5c0f22 0%,#7a1530 55%,#ccc 55%,#555 100%)}
+.flag-switzerland   {background:linear-gradient(145deg,#7a0000 0%,#9a1010 60%,#1a1a1a 100%)}
+.flag-brazil        {background:linear-gradient(145deg,#0d4d1e 0%,#1a6b2a 35%,#c4a000 65%,#002b7f 100%)}
+.flag-morocco       {background:linear-gradient(145deg,#7a0000 0%,#9a1010 55%,#1a4a1a 100%)}
+.flag-haiti         {background:linear-gradient(145deg,#00209f 0%,#0a2aaa 50%,#d21034 50%)}
+.flag-scotland      {background:linear-gradient(145deg,#003088 0%,#0a3aaa 60%,#3a0808 100%)}
+.flag-usa           {background:linear-gradient(145deg,#7a0000 0%,#1a1a1a 45%,#002868 100%)}
+.flag-paraguay      {background:linear-gradient(145deg,#7a0000 0%,#1a1a1a 40%,#0a4a1a 100%)}
+.flag-australia     {background:linear-gradient(145deg,#00205b 0%,#0d2d7a 60%,#7a0000 100%)}
+.flag-turkiye       {background:linear-gradient(145deg,#7a0000 0%,#a01010 100%)}
+.flag-germany       {background:linear-gradient(145deg,#111 0%,#1a1a1a 33%,#7a0000 33%,#9a0000 66%,#c4a000 66%)}
+.flag-curacao       {background:linear-gradient(145deg,#003da5 0%,#0050cc 60%,#b89a00 100%)}
+.flag-cote-divoire  {background:linear-gradient(145deg,#c45500 0%,#1a1a1a 40%,#0a4a1a 100%)}
+.flag-ecuador       {background:linear-gradient(145deg,#c4a000 0%,#002b7f 40%,#7a0000 100%)}
+.flag-netherlands   {background:linear-gradient(145deg,#ae1c28 0%,#1a1a1a 45%,#21468b 100%)}
+.flag-japan         {background:linear-gradient(145deg,#1a1a1a 0%,#111 50%,#7a0000 100%)}
+.flag-sweden        {background:linear-gradient(145deg,#006aa7 0%,#0080cc 60%,#fecc02 100%)}
+.flag-tunisia       {background:linear-gradient(145deg,#7a0000 0%,#a01010 60%,#1a1a1a 100%)}
+.flag-belgium       {background:linear-gradient(145deg,#111 0%,#7a0000 40%,#c4a000 100%)}
+.flag-egypt         {background:linear-gradient(145deg,#7a0000 0%,#1a1a1a 40%,#111 100%)}
+.flag-ir-iran       {background:linear-gradient(145deg,#1a5c2a 0%,#1a1a1a 40%,#7a0000 100%)}
+.flag-new-zealand   {background:linear-gradient(145deg,#00205b 0%,#0d2d7a 70%,#7a0000 100%)}
+.flag-spain         {background:linear-gradient(145deg,#7a0000 0%,#c41230 45%,#7a0000 100%)}
+.flag-cabo-verde    {background:linear-gradient(145deg,#003893 0%,#0044bb 50%,#cf2027 100%)}
+.flag-saudi-arabia  {background:linear-gradient(145deg,#006c35 0%,#008045 70%,#111 100%)}
+.flag-uruguay       {background:linear-gradient(145deg,#5b9bd5 0%,#4a8abf 60%,#1a1a1a 100%)}
+.flag-france        {background:linear-gradient(145deg,#002395 0%,#1a1a1a 45%,#ed2939 100%)}
+.flag-senegal       {background:linear-gradient(145deg,#00853f 0%,#1a1a1a 40%,#fdef42 100%)}
+.flag-iraq          {background:linear-gradient(145deg,#111 0%,#ce1126 40%,#007a3d 100%)}
+.flag-norway        {background:linear-gradient(145deg,#ba0c2f 0%,#ba0c2f 55%,#003087 100%)}
+.flag-argentina     {background:linear-gradient(145deg,#74acdf 0%,#ddeeff 45%,#74acdf 100%)}
+.flag-algeria       {background:linear-gradient(145deg,#006233 0%,#1a7a44 55%,#1a1a1a 100%)}
+.flag-austria       {background:linear-gradient(145deg,#7a0000 0%,#1a1a1a 45%,#7a0000 100%)}
+.flag-jordan        {background:linear-gradient(145deg,#111 0%,#7a0000 33%,#007a3d 66%,#1a1a1a 100%)}
+.flag-portugal      {background:linear-gradient(145deg,#006600 0%,#1a8a2a 35%,#7a0000 65%,#9a0000 100%)}
+.flag-congo-dr      {background:linear-gradient(145deg,#007fff 0%,#7a0000 50%,#c4a000 100%)}
+.flag-uzbekistan    {background:linear-gradient(145deg,#1eb4e0 0%,#1a1a1a 40%,#1eb46e 100%)}
+.flag-colombia      {background:linear-gradient(145deg,#c4a000 0%,#c4a000 33%,#002b7f 33%,#002b7f 66%,#7a0000 66%)}
+.flag-england       {background:linear-gradient(145deg,#1a1a2e 0%,#1a1a1a 50%,#7a0000 100%)}
+.flag-croatia       {background:linear-gradient(145deg,#7a0000 0%,#1a1a1a 50%,#002b7f 100%)}
+.flag-ghana         {background:linear-gradient(145deg,#7a0000 0%,#c4a000 40%,#006b3f 100%)}
+.flag-panama        {background:linear-gradient(145deg,#002b7f 0%,#1a1a1a 50%,#7a0000 100%)}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-top">
+    <div class="logo">
+      <span class="logo-main">Copa do Mundo</span>
+      <span class="logo-sub">Álbum de Figurinhas</span>
+    </div>
+    <div class="header-stats">
+      <div class="hstat"><div class="hstat-val" id="hOwned">0</div><div class="hstat-label">Tenho</div></div>
+      <div class="hstat-div"></div>
+      <div class="hstat"><div class="hstat-val" id="hPct">0%</div><div class="hstat-label">Completo</div></div>
+    </div>
+  </div>
+  <div class="progress-wrap"><div class="progress-fill" id="globalBar"></div></div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-section="all">Grupos</button>
+    <button class="nav-tab" data-section="specials">Especiais</button>
+    <button class="nav-tab" data-section="missing">Faltando</button>
+  </nav>
+</header>
+
+<main class="main">
+  <div class="section active" id="sec-all"></div>
+  <div class="section" id="sec-specials"></div>
+  <div class="section" id="sec-missing"></div>
+</main>
+
+<div class="bottom-bar">
+  <div class="bstat"><span class="bstat-val" id="bOwned">0</span><span class="bstat-label">Tenho</span></div>
+  <div class="bstat-div"></div>
+  <div class="bstat"><span class="bstat-val" id="bMissing">980</span><span class="bstat-label">Faltam</span></div>
+  <div class="bstat-div"></div>
+  <div class="bstat"><span class="bstat-val" id="bPct">0%</span><span class="bstat-label">Completo</span></div>
+</div>
+
+<script>
+const GROUPS=[
+  {name:'Grupo A',teams:['Mexico','South Africa','Korea Republic','Czechia']},
+  {name:'Grupo B',teams:['Canada','Bosnia H.','Qatar','Switzerland']},
+  {name:'Grupo C',teams:['Brazil','Morocco','Haiti','Scotland']},
+  {name:'Grupo D',teams:['USA','Paraguay','Australia','Türkiye']},
+  {name:'Grupo E',teams:['Germany','Curaçao',"Côte d'Ivoire",'Ecuador']},
+  {name:'Grupo F',teams:['Netherlands','Japan','Sweden','Tunisia']},
+  {name:'Grupo G',teams:['Belgium','Egypt','IR Iran','New Zealand']},
+  {name:'Grupo H',teams:['Spain','Cabo Verde','Saudi Arabia','Uruguay']},
+  {name:'Grupo I',teams:['France','Senegal','Iraq','Norway']},
+  {name:'Grupo J',teams:['Argentina','Algeria','Austria','Jordan']},
+  {name:'Grupo K',teams:['Portugal','Congo DR','Uzbekistan','Colombia']},
+  {name:'Grupo L',teams:['England','Croatia','Ghana','Panama']},
+];
+
+// Logo filenames exactly as saved
+const LOGO={
+  'Mexico':'mexico','South Africa':'south-africa','Korea Republic':'korea-republic',
+  'Czechia':'czechia','Canada':'canada','Bosnia H.':'bosnia-h','Qatar':'qatar',
+  'Switzerland':'switzerland','Brazil':'brazil','Morocco':'morocco','Haiti':'haiti',
+  'Scotland':'scotland','USA':'usa','Paraguay':'paraguay','Australia':'australia',
+  'Türkiye':'turkiye','Germany':'germany','Curaçao':'curacao',"Côte d'Ivoire":'cote-divoire',
+  'Ecuador':'ecuador','Netherlands':'netherlands','Japan':'japan','Sweden':'sweden',
+  'Tunisia':'tunisia','Belgium':'belgium','Egypt':'egypt','IR Iran':'ir-iran',
+  'New Zealand':'new-zealand','Spain':'spain','Cabo Verde':'cabo-verde',
+  'Saudi Arabia':'saudi-arabia','Uruguay':'uruguay','France':'france','Senegal':'senegal',
+  'Iraq':'iraq','Norway':'norway','Argentina':'argentina','Algeria':'algeria',
+  'Austria':'austria','Jordan':'jordan','Portugal':'portugal','Congo DR':'congo-dr',
+  'Uzbekistan':'uzbekistan','Colombia':'colombia','England':'england','Croatia':'croatia',
+  'Ghana':'ghana','Panama':'panama'
+};
+
+const FLAG={
+  'Mexico':'mexico','South Africa':'south-africa','Korea Republic':'korea-republic',
+  'Czechia':'czechia','Canada':'canada','Bosnia H.':'bosnia-h','Qatar':'qatar',
+  'Switzerland':'switzerland','Brazil':'brazil','Morocco':'morocco','Haiti':'haiti',
+  'Scotland':'scotland','USA':'usa','Paraguay':'paraguay','Australia':'australia',
+  'Türkiye':'turkiye','Germany':'germany','Curaçao':'curacao',"Côte d'Ivoire":'cote-divoire',
+  'Ecuador':'ecuador','Netherlands':'netherlands','Japan':'japan','Sweden':'sweden',
+  'Tunisia':'tunisia','Belgium':'belgium','Egypt':'egypt','IR Iran':'ir-iran',
+  'New Zealand':'new-zealand','Spain':'spain','Cabo Verde':'cabo-verde',
+  'Saudi Arabia':'saudi-arabia','Uruguay':'uruguay','France':'france','Senegal':'senegal',
+  'Iraq':'iraq','Norway':'norway','Argentina':'argentina','Algeria':'algeria',
+  'Austria':'austria','Jordan':'jordan','Portugal':'portugal','Congo DR':'congo-dr',
+  'Uzbekistan':'uzbekistan','Colombia':'colombia','England':'england','Croatia':'croatia',
+  'Ghana':'ghana','Panama':'panama'
+};
+
+const SPECIALS={
+  FW:{title:'FIFA World',logo:'fifa-world-cup.png',codes:Array.from({length:20},(_,i)=>`FW${i}`)},
+  CC:{title:'Coca-Cola',logo:'coca-cola.png',codes:Array.from({length:14},(_,i)=>`CC${i+1}`)}
+};
+
+const TOTAL=980;
+let state={};
+try{state=JSON.parse(localStorage.getItem('cdm_album')||'{}')}catch(e){}
+const sliders={};
+
+function sk(g,t,n){return `${g}|${t}|${n}`}
+function spk(type,c){return `SP|${type}|${c}`}
+function owned(key){return state[key]===1}
+function toggle(key){state[key]=state[key]===1?0:1;persist()}
+
+function persist(){
+  try{localStorage.setItem('cdm_album',JSON.stringify(state))}catch(e){}
+  updateStats();
+  updateBadges();
+  if(document.getElementById('sec-missing').classList.contains('active'))renderMissing();
+}
+
+function total(){return Object.values(state).filter(v=>v===1).length}
+
+function updateStats(){
+  const n=total(),pct=Math.round(n/TOTAL*100);
+  ['hOwned','bOwned'].forEach(id=>document.getElementById(id).textContent=n);
+  document.getElementById('bMissing').textContent=TOTAL-n;
+  ['hPct','bPct'].forEach(id=>document.getElementById(id).textContent=pct+'%');
+  document.getElementById('globalBar').style.width=pct+'%';
+}
+
+function updateBadges(){
+  document.querySelectorAll('.team-card').forEach(card=>{
+    const g=card.dataset.group,t=card.dataset.team;
+    let cnt=0;
+    for(let i=0;i<20;i++)if(owned(sk(g,t,i)))cnt++;
+    const badge=card.querySelector('.card-badge');
+    const fill=card.querySelector('.card-progress-fill');
+    badge.textContent=cnt===20?'✓ Completo':`${cnt}/20`;
+    badge.className='card-badge'+(cnt===20?' complete':'');
+    fill.style.width=Math.round(cnt/20*100)+'%';
+  });
+  Object.keys(SPECIALS).forEach(type=>{
+    const codes=SPECIALS[type].codes;
+    let cnt=0;codes.forEach(c=>{if(owned(spk(type,c)))cnt++;});
+    const el=document.getElementById('sc-'+type);
+    if(el){el.textContent=`${cnt}/${codes.length}`;el.className='special-card-count'+(cnt===codes.length?' done':'')}
+  });
+}
+
+function logoImg(file,size=58){
+  return `<img src="${file}" alt="" width="${size}" height="${size}" style="object-fit:contain" onerror="this.style.opacity='0'">`;
+}
+
+function renderCard(group,team){
+  let cnt=0;
+  for(let i=0;i<20;i++)if(owned(sk(group,team,i)))cnt++;
+  const slug=LOGO[team]||'';
+  const flagCls=FLAG[team]||'';
+  const logoFile=`${slug}.png`;
+
+  // Row 1: logo cell + 6 stickers (indices 0-5)
+  const row1=Array.from({length:6},(_,i)=>{
+    const key=sk(group,team,i);
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}"></div>`;
+  }).join('');
+
+  // Row 2: 7 stickers (indices 6-12)
+  const row2=Array.from({length:7},(_,i)=>{
+    const key=sk(group,team,i+6);
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}"></div>`;
+  }).join('');
+
+  // Row 3: 7 stickers (indices 13-19)
+  const row3=Array.from({length:7},(_,i)=>{
+    const key=sk(group,team,i+13);
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}"></div>`;
+  }).join('');
+
+  return `<div class="team-card flag-${flagCls}" data-group="${group}" data-team="${team}">
+    <div class="card-noise"></div>
+    <div class="card-overlay"></div>
+    <div class="card-content">
+      <div class="card-header">
+        <div class="card-header-left">
+          <div class="team-name-large">${team}</div>
+          <div class="card-badge${cnt===20?' complete':''}">${cnt===20?'✓ Completo':`${cnt}/20`}</div>
+        </div>
+        <div class="team-logo-wrap">${logoImg(logoFile)}</div>
+      </div>
+      <div class="sticker-section">
+        <div class="sticker-label">Figurinhas</div>
+        <div class="sticker-rows">
+          <div class="sticker-row">
+            <div class="sticker-logo-cell">${logoImg(logoFile,48)}</div>
+            ${row1}
+          </div>
+          <div class="sticker-row">${row2}</div>
+          <div class="sticker-row">${row3}</div>
+        </div>
+        <div class="card-progress-bar">
+          <div class="card-progress-fill" style="width:${Math.round(cnt/20*100)}%"></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAll(){
+  const container=document.getElementById('sec-all');
+  container.innerHTML='';
+  GROUPS.forEach((g,gi)=>{
+    sliders[gi]=0;
+    const dots=g.teams.map((_,ti)=>`<div class="group-dot${ti===0?' active':''}" data-gi="${gi}" data-ti="${ti}"></div>`).join('');
+    const cards=g.teams.map(t=>renderCard(g.name,t)).join('');
+    const block=document.createElement('div');
+    block.className='group-block';
+    block.innerHTML=`
+      <div class="group-label-row">
+        <span class="group-label">${g.name}</span>
+        <div class="group-dots" id="dots-${gi}">${dots}</div>
+      </div>
+      <div class="slider-viewport" id="vp-${gi}">
+        <div class="slider-track" id="track-${gi}">${cards}</div>
+      </div>
+      <div class="slider-nav">
+        <button class="slider-arrow" id="prev-${gi}" onclick="slide(${gi},-1)" disabled>←</button>
+        <span class="slider-counter" id="ctr-${gi}">1 / ${g.teams.length}</span>
+        <button class="slider-arrow" id="next-${gi}" onclick="slide(${gi},1)">→</button>
+      </div>`;
+    container.appendChild(block);
+  });
+  bindStickers();
+  bindSwipe();
+  bindDots();
+}
+
+function slide(gi,dir){
+  const len=GROUPS[gi].teams.length;
+  const next=Math.max(0,Math.min(len-1,sliders[gi]+dir));
+  if(next===sliders[gi])return;
+  sliders[gi]=next;
+  document.getElementById('track-'+gi).style.transform=`translateX(-${next*100}%)`;
+  document.getElementById('ctr-'+gi).textContent=`${next+1} / ${len}`;
+  document.getElementById('prev-'+gi).disabled=next===0;
+  document.getElementById('next-'+gi).disabled=next===len-1;
+  document.querySelectorAll(`#dots-${gi} .group-dot`).forEach((d,i)=>d.classList.toggle('active',i===next));
+}
+
+function bindDots(){
+  document.querySelectorAll('.group-dot').forEach(d=>{
+    d.addEventListener('click',()=>slide(parseInt(d.dataset.gi),parseInt(d.dataset.ti)-sliders[parseInt(d.dataset.gi)]));
+  });
+}
+
+function bindSwipe(){
+  GROUPS.forEach((_,gi)=>{
+    const vp=document.getElementById('vp-'+gi);
+    let sx=0,sy=0,drag=false,moved=false;
+    const start=e=>{const t=e.touches?e.touches[0]:e;sx=t.clientX;sy=t.clientY;drag=true;moved=false};
+    const move=e=>{
+      if(!drag)return;
+      const t=e.touches?e.touches[0]:e;
+      const dx=t.clientX-sx,dy=t.clientY-sy;
+      if(Math.abs(dx)>6&&Math.abs(dx)>Math.abs(dy)){moved=true;if(e.cancelable)e.preventDefault()}
+    };
+    const end=e=>{
+      if(!drag)return;drag=false;if(!moved)return;
+      const t=e.changedTouches?e.changedTouches[0]:e;
+      if(Math.abs(t.clientX-sx)>40)slide(gi,t.clientX<sx?1:-1);
+    };
+    vp.addEventListener('touchstart',start,{passive:true});
+    vp.addEventListener('touchmove',move,{passive:false});
+    vp.addEventListener('touchend',end);
+    vp.addEventListener('mousedown',start);
+    window.addEventListener('mousemove',e=>{if(drag)move(e)});
+    window.addEventListener('mouseup',e=>{if(drag)end(e)});
+  });
+}
+
+function bindStickers(){
+  document.querySelectorAll('.sticker').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.stopPropagation();
+      toggle(el.dataset.key);
+      el.classList.toggle('owned',owned(el.dataset.key));
+    });
+  });
+}
+
+function renderSpecials(){
+  const container=document.getElementById('sec-specials');
+  container.innerHTML='<div class="specials-grid"></div>';
+  const grid=container.querySelector('.specials-grid');
+  Object.entries(SPECIALS).forEach(([type,meta])=>{
+    let cnt=0;meta.codes.forEach(c=>{if(owned(spk(type,c)))cnt++;});
+    const stickers=meta.codes.map(c=>{
+      const key=spk(type,c);
+      return `<div class="special-sticker${owned(key)?' owned':''}" data-key="${key}">${c}</div>`;
+    }).join('');
+    const card=document.createElement('div');
+    card.className='special-card';
+    card.innerHTML=`
+      <div class="special-card-header">
+        <div class="special-card-logo">${logoImg(meta.logo,36)}</div>
+        <div class="special-card-info">
+          <div class="special-card-title">${meta.title}</div>
+          <div class="special-card-count${cnt===meta.codes.length?' done':''}" id="sc-${type}">${cnt}/${meta.codes.length}</div>
+        </div>
+      </div>
+      <div class="special-sticker-grid">${stickers}</div>`;
+    grid.appendChild(card);
+  });
+  container.querySelectorAll('.special-sticker').forEach(el=>{
+    el.addEventListener('click',()=>{
+      toggle(el.dataset.key);
+      el.classList.toggle('owned',owned(el.dataset.key));
+      updateBadges();
+    });
+  });
+}
+
+function renderMissing(){
+  const container=document.getElementById('sec-missing');
+  container.innerHTML='';
+  const wrap=document.createElement('div');wrap.className='missing-wrap';
+  let html='<div class="missing-title">Figurinhas Faltando</div>';
+  let any=false;
+  GROUPS.forEach(g=>{
+    const missing=[];
+    g.teams.forEach(t=>{
+      for(let i=0;i<20;i++)if(!owned(sk(g.name,t,i)))missing.push(`${t.substring(0,3).toUpperCase()}-${i+1}`);
+    });
+    if(missing.length){
+      any=true;
+      html+=`<div class="missing-group"><div class="missing-group-name">${g.name}</div>
+      <div class="missing-pills">${missing.map(m=>`<span class="missing-pill">${m}</span>`).join('')}</div></div>`;
+    }
+  });
+  const spMissing=[];
+  Object.entries(SPECIALS).forEach(([type,meta])=>meta.codes.forEach(c=>{if(!owned(spk(type,c)))spMissing.push(c)}));
+  if(spMissing.length){
+    any=true;
+    html+=`<div class="missing-group"><div class="missing-group-name">Especiais</div>
+    <div class="missing-pills">${spMissing.map(c=>`<span class="missing-pill">${c}</span>`).join('')}</div></div>`;
+  }
+  if(!any)html+='<div class="empty-state">🏆 Álbum completo! Parabéns!</div>';
+  wrap.innerHTML=html;container.appendChild(wrap);
+}
+
+document.querySelectorAll('.nav-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    const sec=tab.dataset.section;
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('sec-'+sec).classList.add('active');
+    if(sec==='missing')renderMissing();
+  });
+});
+
+renderAll();
+renderSpecials();
+updateStats();
+</script>
+</body>
+</html>
