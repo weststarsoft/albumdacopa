@@ -120,6 +120,26 @@ body{background:var(--surface);color:var(--text);font-family:'Barlow',sans-serif
 .sticker.owned{background:rgba(212,168,67,0.15);border-color:rgba(212,168,67,0.6)}
 .sticker .trophy{display:none;width:72%;height:72%}
 .sticker.owned .trophy{display:block}
+.snum{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.45);pointer-events:none;line-height:1}
+.sticker.owned .snum{display:none}
+
+/* Special sticker icons */
+.special-sticker .sp-icon{display:none;width:55%;height:55%}
+.special-sticker.owned .sp-icon{display:block}
+.special-sticker.owned .sp-label{display:none}
+.sp-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;color:rgba(255,255,255,0.5);text-align:center;line-height:1.2}
+
+/* Special card gradients */
+.special-card.fw-card{background:linear-gradient(145deg,#1a1200 0%,#2a1e00 40%,#1a1000 100%);border-color:rgba(212,168,67,0.3)}
+.special-card.fw-card .special-card-title{color:var(--gold)}
+.special-card.fw-card .special-sticker{background:rgba(212,168,67,0.07);border-color:rgba(212,168,67,0.2)}
+.special-card.fw-card .special-sticker:hover{background:rgba(212,168,67,0.18);border-color:rgba(212,168,67,0.5)}
+.special-card.fw-card .special-sticker.owned{background:rgba(212,168,67,0.2);border-color:rgba(212,168,67,0.7)}
+.special-card.cc-card{background:linear-gradient(145deg,#1a0000 0%,#2a0505 40%,#1a0000 100%);border-color:rgba(220,50,50,0.3)}
+.special-card.cc-card .special-card-title{color:#e84040}
+.special-card.cc-card .special-sticker{background:rgba(220,50,50,0.07);border-color:rgba(220,50,50,0.2)}
+.special-card.cc-card .special-sticker:hover{background:rgba(220,50,50,0.18);border-color:rgba(220,50,50,0.5)}
+.special-card.cc-card .special-sticker.owned{background:rgba(220,50,50,0.2);border-color:rgba(220,50,50,0.6)}
 .sticker.owned:hover{background:rgba(212,168,67,0.25)}
 
 .card-progress-bar{margin-top:10px;height:2px;background:rgba(255,255,255,0.1);border-radius:99px;overflow:hidden}
@@ -344,6 +364,30 @@ function persist(){
 }
 
 const TROPHY=`<svg class="trophy" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#F2D07A"/><stop offset="50%" stop-color="#D4A843"/><stop offset="100%" stop-color="#8A6020"/></linearGradient></defs><g fill="url(#tg)"><path d="M44 8H20v2h-4v2h-4v4h4v2h2c.5 6 3.5 11 8 14v3h-4v3h-4v4h28v-4h-4v-3h-4v-3c4.5-3 7.5-8 8-14h2v-2h4v-4h-4v-2h-4V8z M40 18v-6H24v6c0 6 3.6 10 8 10s8-4 8-10z M12 12v4h4v-2h-2v-2h-2z M52 12h-2v2h-2v2h4v-4z"/><rect x="24" y="50" width="16" height="3" rx="1"/><rect x="20" y="53" width="24" height="3" rx="1"/></g></svg>`;
+const SOCCER_BALL=`<svg class="sp-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F2D07A"/><stop offset="100%" stop-color="#B8860B"/></linearGradient></defs>
+<circle cx="32" cy="32" r="26" fill="url(#bg2)" opacity="0.15" stroke="url(#bg2)" stroke-width="1.5"/>
+<circle cx="32" cy="32" r="22" fill="none" stroke="url(#bg2)" stroke-width="1.5"/>
+<polygon points="32,14 26,20 20,18 18,25 22,30 20,36 26,38 32,44 38,38 44,36 42,30 46,25 44,18 38,20" fill="none" stroke="url(#bg2)" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="32,18 27,22 28,28 32,30 36,28 37,22" fill="url(#bg2)" opacity="0.7"/>
+<polygon points="20,26 22,31 26,30 27,24 22,21" fill="url(#bg2)" opacity="0.7"/>
+<polygon points="44,26 42,31 38,30 37,24 42,21" fill="url(#bg2)" opacity="0.7"/>
+<polygon points="24,38 28,36 28,30 23,32" fill="url(#bg2)" opacity="0.7"/>
+<polygon points="40,38 36,36 36,30 41,32" fill="url(#bg2)" opacity="0.7"/>
+<polygon points="32,44 36,40 36,36 32,38 28,36 28,40" fill="url(#bg2)" opacity="0.7"/>
+</svg>`;
+
+const BOTTLE=`<svg class="sp-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<g fill="none" stroke="rgba(255,255,255,0.9)" stroke-linejoin="round" stroke-linecap="round">
+<rect x="26" y="6" width="12" height="6" rx="2" stroke-width="1.5" fill="rgba(255,255,255,0.15)"/>
+<path d="M24 12h16v4l4 6v28a4 4 0 01-4 4H24a4 4 0 01-4-4V22l4-6V12z" stroke-width="1.5" fill="rgba(255,255,255,0.1)"/>
+<path d="M20 22h24" stroke-width="1.5"/>
+<path d="M22 30h20M22 38h20" stroke-width="1" opacity="0.5"/>
+<ellipse cx="32" cy="44" rx="6" ry="3" stroke-width="1" opacity="0.4" fill="rgba(255,255,255,0.1)"/>
+</g>
+<rect x="26" y="6" width="12" height="6" rx="2" fill="rgba(255,255,255,0.25)" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
+</svg>`;
+
 function total(){return Object.values(state).filter(v=>v===1).length}
 
 function updateStats(){
@@ -387,19 +431,19 @@ function renderCard(group,team){
   // Row 1: logo cell + 6 stickers (indices 0-5)
   const row1=Array.from({length:6},(_,i)=>{
     const key=sk(group,team,i);
-    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:''}</div>`;
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:`<span class="snum">${i+1}</span>`}</div>`;
   }).join('');
 
   // Row 2: 7 stickers (indices 6-12)
   const row2=Array.from({length:7},(_,i)=>{
     const key=sk(group,team,i+6);
-    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:''}</div>`;
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:`<span class="snum">${i+7}</span>`}</div>`;
   }).join('');
 
   // Row 3: 7 stickers (indices 13-19)
   const row3=Array.from({length:7},(_,i)=>{
     const key=sk(group,team,i+13);
-    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:''}</div>`;
+    return `<div class="sticker${owned(key)?' owned':''}" data-key="${key}">${owned(key)?TROPHY:`<span class="snum">${i+14}</span>`}</div>`;
   }).join('');
 
   return `<div class="team-card flag-${flagCls}" data-group="${group}" data-team="${team}">
@@ -507,12 +551,14 @@ function bindStickers(){
   document.querySelectorAll('.sticker').forEach(el=>{
     el.addEventListener('click',e=>{
       e.stopPropagation();
-      toggle(el.dataset.key);
-      const isOwned=owned(el.dataset.key);
+      const key=el.dataset.key;
+      // get number from current snum span
+      const numEl=el.querySelector('.snum');
+      const num=numEl?numEl.textContent:'';
+      toggle(key);
+      const isOwned=owned(key);
       el.classList.toggle('owned',isOwned);
-      let t=el.querySelector('.trophy');
-      if(isOwned&&!t){el.insertAdjacentHTML('beforeend',TROPHY)}
-      else if(!isOwned&&t){t.remove()}
+      el.innerHTML=isOwned?TROPHY:`<span class="snum">${num}</span>`;
     });
   });
 }
@@ -523,12 +569,15 @@ function renderSpecials(){
   const grid=container.querySelector('.specials-grid');
   Object.entries(SPECIALS).forEach(([type,meta])=>{
     let cnt=0;meta.codes.forEach(c=>{if(owned(spk(type,c)))cnt++;});
-    const stickers=meta.codes.map(c=>{
+    const icon=type==='FW'?SOCCER_BALL:BOTTLE;
+    const stickers=meta.codes.map((c,idx)=>{
       const key=spk(type,c);
-      return `<div class="special-sticker${owned(key)?' owned':''}" data-key="${key}">${c}</div>`;
+      return `<div class="special-sticker${owned(key)?' owned':''}" data-key="${key}">
+        ${owned(key)?icon:`<span class="sp-label">${c}</span>`}
+      </div>`;
     }).join('');
     const card=document.createElement('div');
-    card.className='special-card';
+    card.className=`special-card ${type==='FW'?'fw-card':'cc-card'}`;
     card.innerHTML=`
       <div class="special-card-header">
         <div class="special-card-logo">${logoImg(meta.logo,36)}</div>
@@ -541,9 +590,14 @@ function renderSpecials(){
     grid.appendChild(card);
   });
   container.querySelectorAll('.special-sticker').forEach(el=>{
+    const type=el.closest('.special-card').classList.contains('fw-card')?'FW':'CC';
+    const icon=type==='FW'?SOCCER_BALL:BOTTLE;
     el.addEventListener('click',()=>{
       toggle(el.dataset.key);
-      el.classList.toggle('owned',owned(el.dataset.key));
+      const isOwned=owned(el.dataset.key);
+      el.classList.toggle('owned',isOwned);
+      const code=el.dataset.key.split('|')[2];
+      el.innerHTML=isOwned?icon:`<span class="sp-label">${code}</span>`;
       updateBadges();
     });
   });
