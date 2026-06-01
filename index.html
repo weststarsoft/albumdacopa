@@ -354,7 +354,10 @@ const sliders={};
 function sk(g,t,n){return `${g}|${t}|${n}`}
 function spk(type,c){return `SP|${type}|${c}`}
 function owned(key){return state[key]===1}
-function toggle(key){state[key]=state[key]===1?0:1;persist()}
+function toggle(key){
+  if(state[key]===1){delete state[key]}else{state[key]=1}
+  persist()
+}
 
 function persist(){
   try{localStorage.setItem('cdm_album',JSON.stringify(state))}catch(e){}
